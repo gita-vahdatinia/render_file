@@ -2,29 +2,34 @@ import socket
 import  tqdm
 import os
 import argparse
+import requests
 
 parser = argparse.ArgumentParser(description='Input files you wanna send')
 parser.add_argument('files',
-                   help='files to send', nargs='?')
-# parser.add_argument('-i i',
-#                   help='ip address to send to',)
+                   help='files to send')
+parser.add_argument('name',
+                  help='name to send to',)
 args = parser.parse_args()
 
 
-host = "192.168.1.22"
+name = args.name
+r = requests.get(f"http://127.0.0.1:5000/api/{name}")
+host = r.json()
 port = 5001
+BUFFER_SIZE = 4096
+SEPARATOR = "<SEPARATOR>"
 filename = args.files
 filesize = os.path.getsize(filename)
 s = socket.socket()
 try:
-    s.bind((host, port))
-    s.listen(1)
+    s.connect((host, port))
 except OSError as msg:
     s.close()
     s = None
 
 # start sending the file
 progress = tqdm.tqdm(range(filesize), f"Sending {filename}", unit="B", unit_scale=True, unit_divisor=1024)
+s.send(f"{filename}{SEPARATOR}{filesize}".encode())
 with open(filename, "rb") as f:
     for _ in progress:
         # read the bytes from the file
@@ -35,5 +40,4 @@ with open(filename, "rb") as f:
         s.sendall(bytes_read)
         # update the progress bar
         progress.update(len(bytes_read))
-# close the socket
 s.close()

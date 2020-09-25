@@ -13,11 +13,11 @@ def post_ip(name):
 
 
 @app.route('/api/<string:name>', methods=["GET"])
-def send_file(name, inputfile):
+def send_file(name,):
     #giving the ip address yourself
     if name not in DNS:
         return "Not Found", 404
-    return DNS[name]
+    return jsonify(DNS[name])
 
 
 @app.route('/')
