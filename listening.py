@@ -2,14 +2,21 @@ import socket
 import tqdm
 import os
 import argparse
-
+import requests
 # device's IP address
 SERVER_HOST = "0.0.0.0"
 SERVER_PORT = 5001
 BUFFER_SIZE = 4096
 SEPARATOR = "<SEPARATOR>"
 
+parser = argparse.ArgumentParser(description='Input name you want to set')
+parser.add_argument('name',
+                  help='name to send to',)
+args = parser.parse_args()
+
 s = socket.socket()
+
+r = requests.post(f"http://{SERVER_HOST}:5000/api/{args.name}")
 
 s.bind((SERVER_HOST, SERVER_PORT))
 s.listen(5)

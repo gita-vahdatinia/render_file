@@ -1,5 +1,5 @@
 import socket
-import  tqdm
+import tqdm
 import os
 import argparse
 import requests
