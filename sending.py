@@ -13,7 +13,8 @@ args = parser.parse_args()
 
 
 name = args.name
-r = requests.get(f"http://127.0.0.1:5000/api/{name}")
+SERVER_HOST = "192.168.1.22"
+r = requests.get(f"http://{SERVER_HOST}:5000/api/{name}")
 host = r.json()
 port = 5001
 BUFFER_SIZE = 4096
